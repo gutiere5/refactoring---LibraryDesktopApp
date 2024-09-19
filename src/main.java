@@ -3,11 +3,11 @@
 
 public class main{
 	
-	public static void getTenRecords() {
+	public static void GetTenRecords() {
 		int count = 0;
 		int limit = 10; // Number of books to print
 		
-		Book.sortByRatingAscending();
+		//Book.SortByRatingAscending();
 		
 		for (Book book : Book.records) {
 		    if (count >= limit) {
@@ -39,7 +39,14 @@ public class main{
 	public static void main(String args[]){
 		Book.ImportRecords();
 		
-		getTenRecords(); // Testing - Elber
-		//PrintAllBooks(); // Testing - Elber 
+		GetTenRecords(); // Testing - Elber
+		//PrintAllBooks(); // Testing - Elber
+		Book.SortByRatingDescending(); // Testing - Sarah
+		GetTenRecords(); // Testing - Sarah
+		Book.GetBookByID(4); // Testing - Sarah
+		Book.GetBookByISBN("316015849"); // Testing - Sarah
+		//System.out.println(Book.records.get(0).title);
+		//System.out.println(Book.GetBookByID(1).title);
+		
 	}
 }
