@@ -9,14 +9,22 @@ import java.util.Comparator;
 public class Book{
 	static List<Book> records = new ArrayList<Book>();
 
-	String id;
-	String title;
-	String authors;
-	String isbn;
-	String pubYear;
-	Double aveRating;
+	int id;
+	String title = null;
+	String authors = null;
+	String isbn = null;
+	String pubYear = null;
+	Double aveRating = null;
+	
+	Book(int id){
+		this.id = id;
+	}
+	
+	Book(String isbn){
+		this.isbn = isbn;
+	}
 
-	Book(String id, String title, String authors, String isbn, String pubYear, Double aveRating){
+	Book(int id, String title, String authors, String isbn, String pubYear, Double aveRating){
 		this.id = id;
 		this.title = title;
 		this.authors = authors;
@@ -25,8 +33,6 @@ public class Book{
 		this.aveRating = aveRating;
 
 	}
-
-
 
 	public static void ImportRecords() {
 		// Define the delimiter used in the CSV file (in this case, a comma)
@@ -80,12 +86,14 @@ public class Book{
 
 				// Create a new Book object using the parsed values from the line
 				// Use the previously determined column indices to map the correct values to the Book's fields
-				Book book = new Book(values[idIdx], 
+				Book book = new Book(
+						Integer.parseInt(values[idIdx]), 
 						values[titleIdx], 
 						values[authorsIdx],
 						values[isbnIdx],
 						values[pubYearIdx],
-						Double.parseDouble(values[aveRatingIdx]));
+						Double.parseDouble(values[aveRatingIdx])
+						);
 
 				// Add the newly created Book object to the 'records' list
 				records.add(book);
@@ -97,36 +105,69 @@ public class Book{
 		}
 	}
 
-	static String GetBookByID(String id) {
+	static Book GetBookByID(int id) {
 		// binary search
-		return null; //Collections.binarySearch(records, id);
+		SortByIDAscending();
+		int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(Book -> Book.id));
+		Book search = records.get(idx);
+		System.out.println(search.title);
+		return search; //Collections.binarySearch(records, id);
 	}
-	static String GetBookByISBN(String isbn) {
-		return null;
+	
+	static Book GetBookByISBN(String isbn) {
+		// binary search
+		SortByISBNAscending();
+		int idx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
+		Book search = records.get(idx);
+		System.out.println(search.title);
+		return search; //Collections.binarySearch(records, id);
+	}
+	
+	public static void SortByISBNAscending() {
+		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
+	}
+	
+	public static void SortByISBNDescending() {
+		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
+		Collections.reverse(records);
+	}
+	
+	public static void SortByIDAscending() {
+		Collections.sort(records, Comparator.comparingInt(Book -> Book.id));
+	}
+	
+	public static void SortByIDDescending() {
+		Collections.sort(records, Comparator.comparingInt(Book -> Book.id));
+		Collections.reverse(records);
 	}
 	
 	// Sorting by rating ascending
-	public static void sortByRatingAscending() {
+	public static void SortByRatingAscending() {
 		Collections.sort(records, Comparator.comparingDouble(Book -> Book.aveRating));
 	}
-
+	
+	public static void SortByRatingDescending() {
+		//records.sort(Comparator.comparingDouble(Book -> Book.aveRating).reversed());
+		Collections.sort(records, Comparator.comparingDouble(Book -> Book.aveRating));
+		Collections.reverse(records);
+	}
 	// Sorting by title ascending
 	public static void SortByTitleAscending() {
-		Collections.sort(records, Comparator.comparing(book -> book.title));
+		Collections.sort(records, Comparator.comparing(Book -> Book.title));
 	}
 
 	// Sorting by title descending
 	public static void SortByTitleDescending() {
-		//TODO  Collections.sort(records, Comparator.comparing(book -> book.title).reversed());
+		Collections.sort(records, Comparator.comparing(Book -> Book.title, Comparator.reverseOrder()));
 	}
 
 	// Sorting by publication year ascending
 	public static void SortByPublicationYearAscending() {
-		Collections.sort(records, Comparator.comparing(book -> book.pubYear));
+		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear));
 	}
 
 	// Sorting by publication year descending
 	public static void SortByPublicationYearDescending() {
-		//TODO  Collections.sort(records, Comparator.comparing(book -> book.pubYear).reversed());
+		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear, Comparator.reverseOrder()));
 	}
 }
