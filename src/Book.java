@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Comparator;
@@ -15,11 +14,11 @@ public class Book{
 	String isbn = null;
 	String pubYear = null;
 	Double aveRating = null;
-	
+
 	Book(int id){
 		this.id = id;
 	}
-	
+
 	Book(String isbn){
 		this.isbn = isbn;
 	}
@@ -34,7 +33,7 @@ public class Book{
 
 	}
 
-	public static void ImportRecords() {
+	public static void importRecords() {
 		// Define the delimiter used in the CSV file (in this case, a comma)
 		String delimiter = ",";
 
@@ -105,69 +104,105 @@ public class Book{
 		}
 	}
 
-	static Book GetBookByID(int id) {
+	// Prints the top ten book records
+	public static void getTenRecords() {
+		int count = 0;
+		int limit = 10; // Number of books to print
+
+		sortByRatingDescending();
+
+		for (Book book : Book.records) {
+			if (count >= limit) {
+				break;
+			}
+
+			printBook(book);
+
+			count++;
+		}
+
+	}
+
+	// Print all book records (for testing purposes)
+	public static void printAllBooks() {
+		for (Book book : Book.records) {
+			printBook(book);
+
+		}
+	}
+
+	static Book getBookByID(int id) {
 		// binary search
-		SortByIDAscending();
+		sortByIDAscending();
 		int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(Book -> Book.id));
 		Book search = records.get(idx);
 		System.out.println(search.title);
 		return search; //Collections.binarySearch(records, id);
 	}
-	
-	static Book GetBookByISBN(String isbn) {
+
+	static Book getBookByISBN(String isbn) {
 		// binary search
-		SortByISBNAscending();
+		sortByISBNAscending();
 		int idx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
 		Book search = records.get(idx);
 		System.out.println(search.title);
 		return search; //Collections.binarySearch(records, id);
 	}
-	
-	public static void SortByISBNAscending() {
+
+	public static void sortByISBNAscending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
 	}
-	
-	public static void SortByISBNDescending() {
+
+	public static void sortByISBNDescending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
 		Collections.reverse(records);
 	}
-	
-	public static void SortByIDAscending() {
+
+	public static void sortByIDAscending() {
 		Collections.sort(records, Comparator.comparingInt(Book -> Book.id));
 	}
-	
-	public static void SortByIDDescending() {
+
+	public static void sortByIDDescending() {
 		Collections.sort(records, Comparator.comparingInt(Book -> Book.id));
 		Collections.reverse(records);
 	}
-	
+
 	// Sorting by rating ascending
-	public static void SortByRatingAscending() {
+	public static void sortByRatingAscending() {
 		Collections.sort(records, Comparator.comparingDouble(Book -> Book.aveRating));
 	}
-	
-	public static void SortByRatingDescending() {
+
+	public static void sortByRatingDescending() {
 		//records.sort(Comparator.comparingDouble(Book -> Book.aveRating).reversed());
 		Collections.sort(records, Comparator.comparingDouble(Book -> Book.aveRating));
 		Collections.reverse(records);
 	}
 	// Sorting by title ascending
-	public static void SortByTitleAscending() {
+	public static void sortByTitleAscending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.title));
 	}
 
 	// Sorting by title descending
-	public static void SortByTitleDescending() {
+	public static void sortByTitleDescending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.title, Comparator.reverseOrder()));
 	}
 
 	// Sorting by publication year ascending
-	public static void SortByPublicationYearAscending() {
+	public static void sortByPublicationYearAscending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear));
 	}
 
 	// Sorting by publication year descending
-	public static void SortByPublicationYearDescending() {
+	public static void sortByPublicationYearDescending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear, Comparator.reverseOrder()));
+	}
+
+	public static void printBook(Book book) {
+		System.out.println("ID: " + book.id
+				+ ", Title: "   + book.title
+				+ ", Authors: " + book.authors
+				+ ", ISBN: "    + book.isbn 
+				+ ", Year: " 	+ book.pubYear
+				+ ", Rating: "  + book.aveRating);
 	}
 }
