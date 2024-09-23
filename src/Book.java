@@ -1,8 +1,11 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.Comparator;
 
 public class Book{
@@ -127,8 +130,15 @@ public class Book{
 	public static void printAllBooks() {
 		for (Book book : Book.records) {
 			printBook(book);
-
 		}
+	}
+	
+	public static Object[][] GetAllBooks(){
+		Object[][] bookRows = 
+				records.stream().map(Book::getBook).collect(Collectors.toList())
+					.toArray(new Object[0][0]);
+		return bookRows;
+
 	}
 
 	static Book getBookByID(int id) {
@@ -197,12 +207,31 @@ public class Book{
 		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear, Comparator.reverseOrder()));
 	}
 
-	public static void printBook(Book book) {
+	public static String printBook(Book book) {
 		System.out.println("ID: " + book.id
 				+ ", Title: "   + book.title
 				+ ", Authors: " + book.authors
 				+ ", ISBN: "    + book.isbn 
 				+ ", Year: " 	+ book.pubYear
 				+ ", Rating: "  + book.aveRating);
+		String bookInfo = ("ID: " + String.valueOf(book.id)
+				+ ", Title: "   + book.title
+				+ ", Authors: " + book.authors
+				+ ", ISBN: "    + book.isbn 
+				+ ", Year: " 	+ book.pubYear
+				+ ", Rating: "  + String.valueOf(book.aveRating));
+		return bookInfo;
+	}
+	
+	public static Object[] getBook(Book book) {
+		Object[] bookRow = {
+				book.id,
+				book.title,
+				book.authors,
+				book.isbn,
+				book.pubYear,
+				book.aveRating
+		};
+		return bookRow;
 	}
 }
