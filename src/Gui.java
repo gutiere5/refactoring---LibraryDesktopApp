@@ -1,8 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -62,17 +64,23 @@ public class Gui extends JFrame{
 		/////////
 		// JLabels
 		JLabel PerformanceLabel = new JLabel("Performance: ");
+		JLabel actionLabel = new JLabel("Actions");
 
 		// JButtons
-		topTenButton = new JButton("Show Top Ten");
+		topTenButton =  new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
+		
+		showAllButton.setPreferredSize(new Dimension(100,40));
 
 
 		// Add Components to Performance Panel
 		performancePanel.add(PerformanceLabel);
 
 		// Add Components to Action Panel
+		actionPanel.add(actionLabel);
+		actionPanel.add(Box.createVerticalStrut(5)); // Add space between label and buttons
 		actionPanel.add(topTenButton);
+		actionPanel.add(Box.createVerticalStrut(5)); // Add space between buttons
 		actionPanel.add(showAllButton);
 
 		// Add Sub Panels to the main Panel
