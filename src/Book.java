@@ -111,7 +111,7 @@ public class Book{
 	public static Object[][] getTenRecords() {
 		Object[][] bookRows = 
 				records.stream().limit(10).map(Book::getBook).collect(Collectors.toList())
-					.toArray(new Object[0][0]);
+				.toArray(new Object[0][0]);
 		return bookRows;
 
 	}
@@ -122,24 +122,31 @@ public class Book{
 			printBook(book);
 		}
 	}
-	
+
 	public static Object[][] GetAllBooks(){
 		Object[][] bookRows = 
 				records.stream().map(Book::getBook).collect(Collectors.toList())
-					.toArray(new Object[0][0]);
+				.toArray(new Object[0][0]);
 		return bookRows;
 	}
 
 
-	
-	static Book getBookByID(int id) {
-		// binary search
+	static Object[][] getBookByID(int id) {
+		// Sort by ID before performing binary search
 		sortByIDAscending();
-		int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(Book -> Book.id));
+
+		// Perform binary search
+		int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(book -> book.id));
+
+		// Find book
 		Book search = records.get(idx);
-		System.out.println(search.title);
-		return search; //Collections.binarySearch(records, id);
+
+		// Convert Book to Object[] and wrap in Object[][]
+		Object[][] bookRow = { getBook(search) };
+		return bookRow;
 	}
+
+
 
 	static Book getBookByISBN(String isbn) {
 		// binary search
@@ -206,14 +213,14 @@ public class Book{
 				+ ", Year: " 	+ book.pubYear
 				+ ", Rating: "  + book.aveRating);
 		String bookInfo = ("ID: " + String.valueOf(book.id)
-				+ ", Title: "   + book.title
-				+ ", Authors: " + book.authors
-				+ ", ISBN: "    + book.isbn 
-				+ ", Year: " 	+ book.pubYear
-				+ ", Rating: "  + String.valueOf(book.aveRating));
+		+ ", Title: "   + book.title
+		+ ", Authors: " + book.authors
+		+ ", ISBN: "    + book.isbn 
+		+ ", Year: " 	+ book.pubYear
+		+ ", Rating: "  + String.valueOf(book.aveRating));
 		return bookInfo;
 	}
-	
+
 	public static Object[] getBook(Book book) {
 		Object[] bookRow = {
 				book.id,
@@ -225,5 +232,5 @@ public class Book{
 		};
 		return bookRow;
 	}
-	
+
 }

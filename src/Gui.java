@@ -32,16 +32,19 @@ public class Gui extends JFrame{
 	JButton topTenButton; 
 	JButton showAllButton;
 	JButton searchButton;
-	
+
 	// JPanels
 	private JPanel mainPanel;
+	
+	// JTextFields
+	JTextField searchField;
 
 	// Constructor
 	public Gui() {
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Libray Desktop App");
-		setBounds(100, 100, 635, 527);
+		setBounds(100, 100, 700, 400);
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(mainPanel);
@@ -55,7 +58,7 @@ public class Gui extends JFrame{
 		// Create a sub panel for performance metrics 
 		JPanel performancePanel = new JPanel();
 		performancePanel.setLayout(new BoxLayout(performancePanel, BoxLayout.X_AXIS));
-		
+
 		// Create a sub panel for search bar
 		JPanel searchPanel = new JPanel();
 		searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
@@ -69,11 +72,11 @@ public class Gui extends JFrame{
 		topTenButton =  new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
 		searchButton = new JButton("Search");
-		
+
 		showAllButton.setPreferredSize(new Dimension(100,40));
-		
-		
-		
+
+
+
 		// Add Components to Search Panel
 		searchPanel.add(SearchBar());
 		searchPanel.add(searchButton);
@@ -107,7 +110,7 @@ public class Gui extends JFrame{
 		return sp;
 	}
 	public JTextField SearchBar() {
-		JTextField searchField = new JTextField("Type here to search for a book");
+		searchField = new JTextField("Type here to search for a book");
 		searchField.setSize(20, 20);
 		return searchField;
 
@@ -128,6 +131,17 @@ public class Gui extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				recordsDTM.setDataVector(Book.GetAllBooks(), Columns);
+			}
+		});
+
+		// Action for Top Ten Button
+		searchButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				int userInput = Integer.parseInt(searchField.getText());
+				recordsDTM.setDataVector(Book.getBookByID(userInput), Columns);
+				
 			}
 		});
 
