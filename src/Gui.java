@@ -1,13 +1,33 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 public class Gui extends JFrame{
-	
-	private JPanel contentPane;
-	
+
+	// DefaultTableModel
+	String[] Columns = {"ID", "Title", "Author(s)", "Rating", "Publication Year", "ISBN"};
+	DefaultTableModel recordsDTM = new DefaultTableModel(Book.GetAllBooks(), Columns);
+	JTable recordDisplay;
+
+	// JButtons
+	JButton topTenButton; 
+	JButton showAllButton;
+
+	private JPanel mainPanel;
+
+	/*
 	public static void main(String[] args) {
 	  try {
           Gui mainMenuFrame = new Gui();
@@ -15,20 +35,88 @@ public class Gui extends JFrame{
       } catch (Exception e) {
           e.printStackTrace();
       }
-	  
+
 	}  
-	  
-	
-	
+	 */
+
+
 	public Gui() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 635, 527);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout(0,0));
-        
-        
-        
+		// Create main panel with BorderLayout
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Libray Desktop App");
+		setBounds(100, 100, 635, 527);
+		mainPanel = new JPanel();
+		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(mainPanel);
+		mainPanel.setLayout(new BorderLayout(0,0));
+		mainPanel.setBackground(new Color(234, 219, 203));
+
+		// Create a sub panel for action buttons
+		JPanel actionPanel = new JPanel();
+		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+
+		// Create a sub panel for performance metrics 
+		JPanel performancePanel = new JPanel();
+		performancePanel.setLayout(new BoxLayout(performancePanel, BoxLayout.Y_AXIS));
+
+		/////////
+		// JLabels
+		JLabel PerformanceLabel = new JLabel("Performance: ");
+
+		// JButtons
+		topTenButton = new JButton("Show Top Ten");
+		showAllButton = new JButton("Show All");
+
+
+		// Add Components to Performance Panel
+		performancePanel.add(PerformanceLabel);
+
+		// Add Components to Action Panel
+		actionPanel.add(topTenButton);
+		actionPanel.add(showAllButton);
+
+		// Add Sub Panels to the main Panel
+		mainPanel.add(performancePanel,BorderLayout.SOUTH);
+		mainPanel.add(BookRecords(),BorderLayout.CENTER);
+		mainPanel.add(actionPanel, BorderLayout.EAST);
+
+	}
+
+
+	public JScrollPane BookRecords(){		
+		recordDisplay = new JTable(recordsDTM);
+		recordDisplay.setDefaultEditor(Object.class, null);
+		recordDisplay.setAutoCreateRowSorter(true);
+		JScrollPane sp = new JScrollPane(recordDisplay);
+		sp.enableInputMethods(false);
+
+
+		return sp;
+	}
+	public JTextField SearchBar() {
+		JTextField searchField = new JTextField("Type here to search for a book");
+		searchField.setSize(20, 20);
+		return searchField;
+	}
+
+	public void actionPerformed() {
+		// Action for Top Ten Button
+		topTenButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				recordsDTM.setDataVector(Book.getTenRecords(), Columns);
+			}
+		});
+
+		// Action for Show All Button
+		showAllButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				recordsDTM.setDataVector(Book.GetAllBooks(), Columns);
+			}
+		});
+
 	}
 }
