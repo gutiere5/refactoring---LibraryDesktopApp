@@ -1,9 +1,11 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.Comparator;
 
 public class Book{
@@ -118,7 +120,6 @@ public class Book{
 	public static void printAllBooks() {
 		for (Book book : Book.records) {
 			printBook(book);
-
 		}
 	}
 	
@@ -127,6 +128,8 @@ public class Book{
 				records.stream().map(Book::getBook).collect(Collectors.toList())
 					.toArray(new Object[0][0]);
 		return bookRows;
+	}
+
 
 	}
 	static Book getBookByID(int id) {
