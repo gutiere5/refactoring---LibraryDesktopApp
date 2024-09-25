@@ -131,7 +131,7 @@ public class Book{
 	}
 
 
-	}
+	
 	static Book getBookByID(int id) {
 		// binary search
 		sortByIDAscending();
@@ -225,4 +225,5 @@ public class Book{
 		};
 		return bookRow;
 	}
+	
 }
