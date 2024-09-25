@@ -14,10 +14,6 @@ import javax.swing.JLabel;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
-import javax.swing.JList;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -35,23 +31,12 @@ public class Gui extends JFrame{
 	// JButtons
 	JButton topTenButton; 
 	JButton showAllButton;
-
+	JButton searchButton;
+	
+	// JPanels
 	private JPanel mainPanel;
 
-	/*
-	public static void main(String[] args) {
-	  try {
-		  Book.importRecords();
-          Gui mainMenuFrame = new Gui();
-          mainMenuFrame.setVisible(true);
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
-
-	}  
-	 */
-
-
+	// Constructor
 	public Gui() {
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,7 +54,11 @@ public class Gui extends JFrame{
 
 		// Create a sub panel for performance metrics 
 		JPanel performancePanel = new JPanel();
-		performancePanel.setLayout(new BoxLayout(performancePanel, BoxLayout.Y_AXIS));
+		performancePanel.setLayout(new BoxLayout(performancePanel, BoxLayout.X_AXIS));
+		
+		// Create a sub panel for search bar
+		JPanel searchPanel = new JPanel();
+		searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
 
 		/////////
 		// JLabels
@@ -79,9 +68,15 @@ public class Gui extends JFrame{
 		// JButtons
 		topTenButton =  new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
+		searchButton = new JButton("Search");
 		
 		showAllButton.setPreferredSize(new Dimension(100,40));
-
+		
+		
+		
+		// Add Components to Search Panel
+		searchPanel.add(SearchBar());
+		searchPanel.add(searchButton);
 
 		// Add Components to Performance Panel
 		performancePanel.add(PerformanceLabel);
@@ -97,6 +92,7 @@ public class Gui extends JFrame{
 		mainPanel.add(performancePanel,BorderLayout.SOUTH);
 		mainPanel.add(BookRecords(),BorderLayout.CENTER);
 		mainPanel.add(actionPanel, BorderLayout.EAST);
+		mainPanel.add(searchPanel,BorderLayout.NORTH);
 
 	}
 
@@ -107,30 +103,6 @@ public class Gui extends JFrame{
 		recordDisplay.setAutoCreateRowSorter(true);
 		JScrollPane sp = new JScrollPane(recordDisplay);
 		sp.enableInputMethods(false);
-
-
-
-	  /*
-	public Gui() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1280, 720);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout(0, 0));
-        contentPane.setBackground(new Color(234, 219, 203));
-        contentPane.add(BookRecords());
-        //contentPane.add(SearchBar());
-	}
-	
-	public JScrollPane BookRecords(){
-		String[] Columns = {"ID", "Title", "Author(s)", "Rating", "Publication Year", "ISBN"};
-		DefaultTableModel recordsDTM = new DefaultTableModel(Book.GetAllBooks(), Columns);
-		JTable recordDisplay = new JTable(recordsDTM);
-		recordDisplay.setDefaultEditor(Object.class, null);
-		JScrollPane sp = new JScrollPane(recordDisplay);
-		sp.enableInputMethods(false); 
-    */
 
 		return sp;
 	}
@@ -155,7 +127,6 @@ public class Gui extends JFrame{
 		showAllButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				recordsDTM.setDataVector(Book.GetAllBooks(), Columns);
 			}
 		});
