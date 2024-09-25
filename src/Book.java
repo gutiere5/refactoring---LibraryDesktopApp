@@ -108,21 +108,11 @@ public class Book{
 	}
 
 	// Prints the top ten book records
-	public static void getTenRecords() {
-		int count = 0;
-		int limit = 10; // Number of books to print
-
-		sortByRatingDescending();
-
-		for (Book book : Book.records) {
-			if (count >= limit) {
-				break;
-			}
-
-			printBook(book);
-
-			count++;
-		}
+	public static Object[][] getTenRecords() {
+		Object[][] bookRows = 
+				records.stream().limit(10).map(Book::getBook).collect(Collectors.toList())
+					.toArray(new Object[0][0]);
+		return bookRows;
 
 	}
 
@@ -138,9 +128,10 @@ public class Book{
 				records.stream().map(Book::getBook).collect(Collectors.toList())
 					.toArray(new Object[0][0]);
 		return bookRows;
-
 	}
 
+
+	}
 	static Book getBookByID(int id) {
 		// binary search
 		sortByIDAscending();
