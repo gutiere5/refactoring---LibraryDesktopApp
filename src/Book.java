@@ -14,7 +14,7 @@ public class Book{
 	int id;
 	String title = null;
 	String authors = null;
-	String isbn = null;
+	String isbn;
 	String pubYear = null;
 	Double aveRating = null;
 
@@ -22,9 +22,10 @@ public class Book{
 		this.id = id;
 	}
 
-	Book(String isbn){
+	Book(String isbn) {
 		this.isbn = isbn;
 	}
+
 
 	Book(int id, String title, String authors, String isbn, String pubYear, Double aveRating){
 		this.id = id;
@@ -116,12 +117,6 @@ public class Book{
 
 	}
 
-	// Print all book records (for testing purposes)
-	public static void printAllBooks() {
-		for (Book book : Book.records) {
-			printBook(book);
-		}
-	}
 
 	public static Object[][] GetAllBooks(){
 		Object[][] bookRows = 
@@ -130,6 +125,15 @@ public class Book{
 		return bookRows;
 	}
 
+	public static Object[][] searchBook(int userInput) {
+
+		if (userInput < 1000) {
+			return getBookByID(userInput);
+		}
+		else {
+			return getBookByISBN(String.valueOf(userInput));
+		}
+	}
 
 	static Object[][] getBookByID(int id) {
 		// Sort by ID before performing binary search
@@ -146,15 +150,20 @@ public class Book{
 		return bookRow;
 	}
 
-
-
-	static Book getBookByISBN(String isbn) {
-		// binary search
+	static Object[][] getBookByISBN(String isbn) {
+		// Sort by ISBN before performing binary search	
 		sortByISBNAscending();
-		int idx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
-		Book search = records.get(idx);
-		System.out.println(search.title);
-		return search; //Collections.binarySearch(records, id);
+
+		// Perform binary search
+		int isbnx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
+
+		// Find Book
+		Book search = records.get(isbnx);
+
+		// Convert Book to object[] and wrap in Object[][]
+		Object[][] bookRow = { getBook(search) };
+
+		return bookRow; 
 	}
 
 	public static void sortByISBNAscending() {

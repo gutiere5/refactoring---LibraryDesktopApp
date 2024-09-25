@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 public class Gui extends JFrame{
 
 	// DefaultTableModel
-	String[] Columns = {"ID", "Title", "Author(s)", "Rating", "Publication Year", "ISBN"};
+	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
 	DefaultTableModel recordsDTM = new DefaultTableModel(Book.GetAllBooks(), Columns);
 	JTable recordDisplay;
 
@@ -140,7 +140,7 @@ public class Gui extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				
 				int userInput = Integer.parseInt(searchField.getText());
-				recordsDTM.setDataVector(Book.getBookByID(userInput), Columns);
+				recordsDTM.setDataVector(Book.searchBook(userInput), Columns);
 				
 			}
 		});
