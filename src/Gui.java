@@ -1,15 +1,21 @@
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +150,49 @@ public class Gui extends JFrame{
 				
 			}
 		});
+		
+		searchField.addMouseListener(new MouseListener() {
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				searchField.setText("");
+			}
 
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		
+		searchField.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(searchField.getText().equals("Type here to search for a book")) {
+					searchField.setText("");
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					searchButton.doClick();
+				}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {	
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+			}
+		});
 	}
 }
