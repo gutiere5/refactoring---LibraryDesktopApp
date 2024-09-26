@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.swing.JOptionPane;
+
 import java.util.Comparator;
 
 public class Book{
@@ -125,45 +128,60 @@ public class Book{
 		return bookRows;
 	}
 
-	public static Object[][] searchBook(int userInput) {
-
-		if (userInput < 1000) {
-			return getBookByID(userInput);
-		}
-		else {
-			return getBookByISBN(String.valueOf(userInput));
-		}
-	}
-
 	static Object[][] getBookByID(int id) {
-		// Sort by ID before performing binary search
-		sortByIDAscending();
+		try {
+			// Sort by ID before performing binary search
+			sortByIDAscending();
 
-		// Perform binary search
-		int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(book -> book.id));
+			// Perform binary search
+			int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(book -> book.id));
 
-		// Find book
-		Book search = records.get(idx);
+			// Check if the book was found (binarySearch returns a negative value if not found)
+			if (idx < 0) {
+				JOptionPane.showMessageDialog(null,"Book with ID " + id + " not found.");
+			}
 
-		// Convert Book to Object[] and wrap in Object[][]
-		Object[][] bookRow = { getBook(search) };
-		return bookRow;
+			// Find book
+			Book search = records.get(idx);
+
+			// Convert Book to Object[] and wrap in Object[][]
+			Object[][] bookRow = { getBook(search) };
+			return bookRow;
+
+		} 
+		catch (IndexOutOfBoundsException e) {
+			return new Object[0][0]; // Return empty array if book not found
+		} 
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return new Object[0][0]; // Return empty array if any other error occurs
+		}
 	}
 
 	static Object[][] getBookByISBN(String isbn) {
-		// Sort by ISBN before performing binary search	
-		sortByISBNAscending();
+		try {
+			// Sort by ISBN before performing binary search	
+			sortByISBNAscending();
 
-		// Perform binary search
-		int isbnx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
+			// Perform binary search
+			int isbnx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
 
-		// Find Book
-		Book search = records.get(isbnx);
+			// Find Book
+			Book search = records.get(isbnx);
 
-		// Convert Book to object[] and wrap in Object[][]
-		Object[][] bookRow = { getBook(search) };
+			// Convert Book to object[] and wrap in Object[][]
+			Object[][] bookRow = { getBook(search) };
 
-		return bookRow; 
+			return bookRow; 
+		}
+		catch (IndexOutOfBoundsException e) {
+			JOptionPane.showMessageDialog(null,"Book with ISBN " + isbn + " not found.");
+			return new Object[0][0]; // Return empty array if book not found
+		}
+		catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			return new Object[0][0]; // Return empty array if any other error occurs
+		}
 	}
 
 	public static void sortByISBNAscending() {

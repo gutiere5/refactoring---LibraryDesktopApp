@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -38,6 +39,9 @@ public class Gui extends JFrame{
 	
 	// JTextFields
 	JTextField searchField;
+	
+	// JComboBox
+	JComboBox searchComboBox;
 
 	// Constructor
 	public Gui() {
@@ -72,12 +76,15 @@ public class Gui extends JFrame{
 		topTenButton =  new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
 		searchButton = new JButton("Search");
-
 		showAllButton.setPreferredSize(new Dimension(100,40));
+		
+		// JComboBox
+		searchComboBox = new JComboBox(new String[] {"ID" , "ISBN"});
 
 
 
 		// Add Components to Search Panel
+		searchPanel.add(searchComboBox);
 		searchPanel.add(SearchBar());
 		searchPanel.add(searchButton);
 
@@ -139,8 +146,24 @@ public class Gui extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				int userInput = Integer.parseInt(searchField.getText());
-				recordsDTM.setDataVector(Book.searchBook(userInput), Columns);
+				
+				if (searchComboBox.getSelectedItem() == "ID") {
+					int userInput = Integer.parseInt(searchField.getText());
+					recordsDTM.setDataVector(Book.getBookByID(userInput), Columns);
+				}
+				
+				if (searchComboBox.getSelectedItem() == "ISBN") {
+					String userInput = searchField.getText();
+					recordsDTM.setDataVector(Book.getBookByISBN(userInput), Columns);
+				}
+				
+				
+				
+				
+				
+				
+				
+				
 				
 			}
 		});
