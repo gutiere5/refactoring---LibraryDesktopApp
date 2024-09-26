@@ -25,7 +25,7 @@ public class Gui extends JFrame{
 
 	// DefaultTableModel
 	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-	DefaultTableModel recordsDTM = new DefaultTableModel(Book.GetAllBooks(), Columns);
+	DefaultTableModel recordsDTM = new DefaultTableModel(Book.getTenRecords(), Columns);
 	JTable recordDisplay;
 
 	// JButtons
