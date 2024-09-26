@@ -1,19 +1,15 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,7 +21,7 @@ public class Gui extends JFrame{
 
 	// DefaultTableModel
 	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-	DefaultTableModel recordsDTM = new DefaultTableModel(Book.GetAllBooks(), Columns);
+	DefaultTableModel recordsDTM = new DefaultTableModel(SearchPerformance.getTenRecords(), Columns);
 	JTable recordDisplay;
 
 	// JButtons
@@ -35,11 +31,17 @@ public class Gui extends JFrame{
 
 	// JPanels
 	private JPanel mainPanel;
-	
+
 	// JTextFields
 	JTextField searchField;
 
-	// Constructor
+	// JComboBox
+	JComboBox<?> searchComboBox;
+
+	// JLabels 
+	JLabel timeLabel;
+
+
 	public Gui() {
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,22 +69,27 @@ public class Gui extends JFrame{
 		// JLabels
 		JLabel PerformanceLabel = new JLabel("Performance: ");
 		JLabel actionLabel = new JLabel("Actions");
+		timeLabel = new JLabel("");
 
 		// JButtons
 		topTenButton =  new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
 		searchButton = new JButton("Search");
-
 		showAllButton.setPreferredSize(new Dimension(100,40));
+
+		// JComboBox
+		searchComboBox = new JComboBox(new String[] {"ID" , "ISBN"});
 
 
 
 		// Add Components to Search Panel
+		searchPanel.add(searchComboBox);
 		searchPanel.add(SearchBar());
 		searchPanel.add(searchButton);
 
 		// Add Components to Performance Panel
 		performancePanel.add(PerformanceLabel);
+		performancePanel.add(timeLabel);
 
 		// Add Components to Action Panel
 		actionPanel.add(actionLabel);
@@ -121,8 +128,7 @@ public class Gui extends JFrame{
 		topTenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				recordsDTM.setDataVector(Book.getTenRecords(), Columns);
+				recordsDTM.setDataVector(SearchPerformance.getTenRecords(), Columns);
 			}
 		});
 
@@ -130,7 +136,7 @@ public class Gui extends JFrame{
 		showAllButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(Book.GetAllBooks(), Columns);
+				recordsDTM.setDataVector(SearchPerformance.GetAllBooks(), Columns);
 			}
 		});
 
@@ -138,13 +144,42 @@ public class Gui extends JFrame{
 		searchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				int userInput = Integer.parseInt(searchField.getText());
-				recordsDTM.setDataVector(Book.searchBook(userInput), Columns);
-				
+
+				try {
+
+					// Check if the input field is empty
+					if (searchField.getText().isEmpty()) {
+						throw new IllegalArgumentException("Input cannot be empty.");
+					}
+
+					if (searchComboBox.getSelectedItem() == "ID") {			
+						// Perform the search and update the table
+						int userInput = Integer.parseInt(searchField.getText());
+						recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
+						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					}
+
+					if (searchComboBox.getSelectedItem() == "ISBN") {								
+						// Perform the search and update the table
+						String userInput = searchField.getText();
+						recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
+						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					}
+				}
+
+				catch (NumberFormatException e1) {
+					// Handle invalid input (non-integer input)
+					JOptionPane.showMessageDialog(null, "Please enter a valid integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
+
+				}
+				catch (IllegalArgumentException e1) {
+					// Handle empty input
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+
+
+
+				}
 			}
 		});
-
-
 	}
 }
