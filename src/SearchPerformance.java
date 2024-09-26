@@ -70,9 +70,18 @@ public class SearchPerformance {
 				// Sort by ISBN before performing binary search	
 				Book.sortByISBNAscending();
 
+				// Record Start Time
+				startTime = System.nanoTime();   // System.currentTimeMillis();
+				
 				// Perform binary search
 				int isbnx = Collections.binarySearch(Book.records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
 
+				//Record the end time
+				endTime = System.nanoTime();	// System.currentTimeMillis();
+				
+				// Calculate the elapsed time in milliseconds or nanoseconds
+				elapsedTime = endTime - startTime;
+				
 				// Find Book
 				Book search = Book.records.get(isbnx);
 

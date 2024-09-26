@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +37,13 @@ public class Gui extends JFrame{
 
 	// JPanels
 	private JPanel mainPanel;
-	
+
 	// JTextFields
 	JTextField searchField;
-	
+
 	// JComboBox
 	JComboBox searchComboBox;
-	
+
 	// JLabels 
 	JLabel timeLabel;
 
@@ -81,7 +82,7 @@ public class Gui extends JFrame{
 		showAllButton = new JButton("Show All");
 		searchButton = new JButton("Search");
 		showAllButton.setPreferredSize(new Dimension(100,40));
-		
+
 		// JComboBox
 		searchComboBox = new JComboBox(new String[] {"ID" , "ISBN"});
 
@@ -150,19 +151,41 @@ public class Gui extends JFrame{
 		searchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				
-				if (searchComboBox.getSelectedItem() == "ID") {
-					int userInput = Integer.parseInt(searchField.getText());
-					recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
-					timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + "Nanoseconds"));
+
+				try {
+					
+					// Check if the input field is empty
+					if (searchField.getText().isEmpty()) {
+						throw new IllegalArgumentException("Input cannot be empty.");
+					}
+					
+					if (searchComboBox.getSelectedItem() == "ID") {			
+						// Perform the search and update the table
+						int userInput = Integer.parseInt(searchField.getText());
+						recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
+						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					}
+					
+					if (searchComboBox.getSelectedItem() == "ISBN") {								
+						// Perform the search and update the table
+						String userInput = searchField.getText();
+						recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
+						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					}
 				}
-				
-				if (searchComboBox.getSelectedItem() == "ISBN") {
-					String userInput = searchField.getText();
-					recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
-					timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + "Nanoseconds"));
-				}					
+
+				catch (NumberFormatException e1) {
+					// Handle invalid input (non-integer input)
+					JOptionPane.showMessageDialog(null, "Please enter a valid integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
+
+				}
+				catch (IllegalArgumentException e1) {
+					// Handle empty input
+					JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+
+
+										
+				}
 			}
 		});
 	}
