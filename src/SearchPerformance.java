@@ -9,8 +9,29 @@ public class SearchPerformance {
 	private static long endTime;
 	public static long elapsedTime;
 	
+	static int linearSearch(String ISBN){
+		int result = -1;
+		for (int i = 0; i < Book.records.size(); i++) {
+			if(Book.records.get(i).isbn == ISBN) {
+				result = i;
+				break;
+			}
+		}
+		return result;
+	}
+
+	static int linearSearch(int id) {
+		int result = -1;
+		for (int i = 0; i < Book.records.size(); i++) {
+			if(Book.records.get(i).id == id) {
+				result = i;
+				break;
+			}
+		}
+		return result;
+	}
 	
-	// Prints the top ten book records
+		// Prints the top ten book records
 		public static Object[][] getTenRecords() {
 			Object[][] bookRows = 
 					Book.records.stream().limit(10).map(Book::getBook).collect(Collectors.toList())
@@ -43,7 +64,7 @@ public class SearchPerformance {
 				elapsedTime = endTime - startTime;
 				
 				// Check if the book was found (binarySearch returns a negative value if not found)
-				if (idx < 0) {
+				if (idx < 0 && Gui.softSearch == false) {
 					JOptionPane.showMessageDialog(null,"Book with ID " + id + " not found.");
 				}
 

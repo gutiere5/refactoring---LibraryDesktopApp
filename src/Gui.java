@@ -36,6 +36,7 @@ public class Gui extends JFrame{
 	// JButtons
 	JButton topTenButton; 
 	JButton showAllButton;
+	JButton testPerfButton;
 	JButton searchButton;
 
 	// JPanels
@@ -49,7 +50,8 @@ public class Gui extends JFrame{
 
 	// JLabels 
 	JLabel timeLabel;
-	boolean softSearch = false;
+	static boolean softSearch = false;
+	static boolean testMode = false;
 
 
 	public Gui() {
@@ -89,6 +91,7 @@ public class Gui extends JFrame{
 		// JButtons
 		topTenButton =  new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
+		testPerfButton = new JButton("Test Mode = OFF");
 		searchButton = new JButton("Search");
 		showAllButton.setPreferredSize(new Dimension(100,40));
 
@@ -112,6 +115,8 @@ public class Gui extends JFrame{
 		actionPanel.add(topTenButton);
 		actionPanel.add(Box.createVerticalStrut(5)); // Add space between buttons
 		actionPanel.add(showAllButton);
+		actionPanel.add(Box.createVerticalStrut(5)); // Add space between buttons
+		actionPanel.add(testPerfButton);
 
 		// Add Sub Panels to the main Panel
 		mainPanel.add(performancePanel,BorderLayout.SOUTH);
@@ -152,6 +157,20 @@ public class Gui extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				recordsDTM.setDataVector(SearchPerformance.GetAllBooks(), Columns);
+			}
+		});
+		
+		testPerfButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(testPerfButton.getText() == "Test Mode = OFF") {
+					testPerfButton.setText("Test Mode = ON ");
+					testMode = true;					
+				}
+				else {
+					testPerfButton.setText("Test Mode = OFF");
+					testMode = false;
+				}
 			}
 		});
 
@@ -244,7 +263,7 @@ public class Gui extends JFrame{
 			@Override
 			public void keyReleased(KeyEvent e) {
 				try {
-					if(!searchField.getText().isEmpty()) {
+					if(!searchField.getText().isEmpty() && testMode == false) {
 						softSearch = true;
 						searchButton.doClick();
 					}
