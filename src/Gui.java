@@ -66,7 +66,7 @@ public class Gui extends JFrame{
 	public Gui() {
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("Libray Desktop App");
+		setTitle("Libray Desktop App (ArrayList)");
 		setBounds(400, 100, 700, 500);
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
