@@ -49,6 +49,7 @@ public class Gui extends JFrame{
 
 	// JLabels 
 	JLabel timeLabel;
+	boolean softSearch = false;
 
 
 	public Gui() {
@@ -159,9 +160,43 @@ public class Gui extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				int userInput = Integer.parseInt(searchField.getText());
-				recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
-				
+				try {
+
+					// Check if the input field is empty
+					if (searchField.getText().isEmpty()) {
+						throw new IllegalArgumentException("Input cannot be empty.");
+					}
+
+					if (searchComboBox.getSelectedItem() == "ID") {			
+						// Perform the search and update the table
+						int userInput = Integer.parseInt(searchField.getText());
+						recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
+						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					}
+
+					if (searchComboBox.getSelectedItem() == "ISBN") {								
+						// Perform the search and update the table
+						String userInput = searchField.getText();
+						recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
+						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					}
+				}
+
+				catch (NumberFormatException e1) {
+					// Handle invalid input (non-integer input)
+					if(softSearch == false) {
+						JOptionPane.showMessageDialog(null, "Please enter a valid integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				catch (IllegalArgumentException e1) {
+					// Handle empty input
+					if(softSearch == false) {
+						JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+					}
+				}
+				finally {
+					softSearch = false;
+				}
 			}
 		});
 		
@@ -169,7 +204,9 @@ public class Gui extends JFrame{
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				searchField.setText("");
+				if(searchField.getText().equals("Type here to search for a book")) {
+					searchField.setText("");
+				}
 			}
 
 			@Override
@@ -207,35 +244,12 @@ public class Gui extends JFrame{
 			@Override
 			public void keyReleased(KeyEvent e) {
 				try {
-
-					// Check if the input field is empty
-					if (searchField.getText().isEmpty()) {
-						throw new IllegalArgumentException("Input cannot be empty.");
-					}
-
-					if (searchComboBox.getSelectedItem() == "ID") {			
-						// Perform the search and update the table
-						int userInput = Integer.parseInt(searchField.getText());
-						recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
-						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
-					}
-
-					if (searchComboBox.getSelectedItem() == "ISBN") {								
-						// Perform the search and update the table
-						String userInput = searchField.getText();
-						recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
-						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+					if(!searchField.getText().isEmpty()) {
+						softSearch = true;
+						searchButton.doClick();
 					}
 				}
-
-				catch (NumberFormatException e1) {
-					// Handle invalid input (non-integer input)
-					JOptionPane.showMessageDialog(null, "Please enter a valid integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
-
-				}
-				catch (IllegalArgumentException e1) {
-					// Handle empty input
-					JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+				catch (Exception ex){
 				}
 			}
 		});
