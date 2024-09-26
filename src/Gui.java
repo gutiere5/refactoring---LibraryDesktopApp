@@ -1,9 +1,14 @@
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -12,6 +17,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -151,7 +158,54 @@ public class Gui extends JFrame{
 		searchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int userInput = Integer.parseInt(searchField.getText());
+				recordsDTM.setDataVector(Book.searchBook(userInput), Columns);
+				
+			}
+		});
+		
+		searchField.addMouseListener(new MouseListener() {
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				searchField.setText("");
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+		});
+		
+		searchField.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(searchField.getText().equals("Type here to search for a book")) {
+					searchField.setText("");
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					searchButton.doClick();
+				}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {	
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
 				try {
 
 					// Check if the input field is empty
@@ -182,9 +236,6 @@ public class Gui extends JFrame{
 				catch (IllegalArgumentException e1) {
 					// Handle empty input
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
-
-
-
 				}
 			}
 		});
