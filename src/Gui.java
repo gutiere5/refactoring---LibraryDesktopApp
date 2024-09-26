@@ -55,7 +55,7 @@ public class Gui extends JFrame{
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Libray Desktop App");
-		setBounds(100, 100, 700, 400);
+		setBounds(400, 100, 700, 500);
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(mainPanel);
@@ -154,13 +154,13 @@ public class Gui extends JFrame{
 			}
 		});
 
-		// Action for Top Ten Button
+		// Action for search Button
 		searchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				int userInput = Integer.parseInt(searchField.getText());
-				recordsDTM.setDataVector(Book.searchBook(userInput), Columns);
+				recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
 				
 			}
 		});
