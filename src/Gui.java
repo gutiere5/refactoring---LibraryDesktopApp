@@ -30,7 +30,16 @@ public class Gui extends JFrame{
 
 	// DefaultTableModel
 	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-	DefaultTableModel recordsDTM = new DefaultTableModel(SearchPerformance.getTenRecords(), Columns);
+	DefaultTableModel recordsDTM = new DefaultTableModel(SearchPerformance.getTenRecords(), Columns) {
+		@Override
+		public Class<?> getColumnClass(int column){
+			if (column == 0) {
+				return Integer.class;
+			}
+			return super.getColumnClass(column);
+		}
+		
+	};
 	JTable recordDisplay;
 
 	// JButtons
