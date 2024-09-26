@@ -1,10 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -52,6 +54,11 @@ public class Gui extends JFrame{
 		setContentPane(mainPanel);
 		mainPanel.setLayout(new BorderLayout(0,0));
 		mainPanel.setBackground(new Color(234, 219, 203));
+		
+		// Load Icon
+		ImageIcon icon = new ImageIcon("book.png");
+		Image iconImage = icon.getImage();
+		setIconImage(iconImage);
 
 		// Create a sub panel for action buttons
 		JPanel actionPanel = new JPanel();
