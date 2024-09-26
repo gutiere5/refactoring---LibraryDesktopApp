@@ -1,10 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -12,10 +10,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -42,12 +36,12 @@ public class Gui extends JFrame{
 	JTextField searchField;
 
 	// JComboBox
-	JComboBox searchComboBox;
+	JComboBox<?> searchComboBox;
 
 	// JLabels 
 	JLabel timeLabel;
 
-	// Constructor
+
 	public Gui() {
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -134,7 +128,6 @@ public class Gui extends JFrame{
 		topTenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				recordsDTM.setDataVector(SearchPerformance.getTenRecords(), Columns);
 			}
 		});
@@ -153,19 +146,19 @@ public class Gui extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					
+
 					// Check if the input field is empty
 					if (searchField.getText().isEmpty()) {
 						throw new IllegalArgumentException("Input cannot be empty.");
 					}
-					
+
 					if (searchComboBox.getSelectedItem() == "ID") {			
 						// Perform the search and update the table
 						int userInput = Integer.parseInt(searchField.getText());
 						recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
 						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
 					}
-					
+
 					if (searchComboBox.getSelectedItem() == "ISBN") {								
 						// Perform the search and update the table
 						String userInput = searchField.getText();
@@ -184,7 +177,7 @@ public class Gui extends JFrame{
 					JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
 
 
-										
+
 				}
 			}
 		});

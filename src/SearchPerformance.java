@@ -16,7 +16,6 @@ public class SearchPerformance {
 					Book.records.stream().limit(10).map(Book::getBook).collect(Collectors.toList())
 					.toArray(new Object[0][0]);
 			return bookRows;
-
 		}
 
 		public static Object[][] GetAllBooks(){

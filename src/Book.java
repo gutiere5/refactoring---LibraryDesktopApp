@@ -29,7 +29,6 @@ public class Book{
 		this.isbn = isbn;
 	}
 
-
 	Book(int id, String title, String authors, String isbn, String pubYear, Double aveRating){
 		this.id = id;
 		this.title = title;
@@ -129,36 +128,6 @@ public class Book{
 		Collections.reverse(records);
 	}
 
-	// Sorting by rating ascending
-	public static void sortByRatingAscending() {
-		Collections.sort(records, Comparator.comparingDouble(Book -> Book.aveRating));
-	}
-
-	public static void sortByRatingDescending() {
-		//records.sort(Comparator.comparingDouble(Book -> Book.aveRating).reversed());
-		Collections.sort(records, Comparator.comparingDouble(Book -> Book.aveRating));
-		Collections.reverse(records);
-	}
-	// Sorting by title ascending
-	public static void sortByTitleAscending() {
-		Collections.sort(records, Comparator.comparing(Book -> Book.title));
-	}
-
-	// Sorting by title descending
-	public static void sortByTitleDescending() {
-		Collections.sort(records, Comparator.comparing(Book -> Book.title, Comparator.reverseOrder()));
-	}
-
-	// Sorting by publication year ascending
-	public static void sortByPublicationYearAscending() {
-		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear));
-	}
-
-	// Sorting by publication year descending
-	public static void sortByPublicationYearDescending() {
-		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear, Comparator.reverseOrder()));
-	}
-	
 	public static Object[] getBook(Book book) {
 		Object[] bookRow = {
 				book.id,
