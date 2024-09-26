@@ -111,83 +111,10 @@ public class Book{
 		}
 	}
 
-	// Prints the top ten book records
-	public static Object[][] getTenRecords() {
-		Object[][] bookRows = 
-				records.stream().limit(10).map(Book::getBook).collect(Collectors.toList())
-				.toArray(new Object[0][0]);
-		return bookRows;
-
-	}
-
-
-	public static Object[][] GetAllBooks(){
-		Object[][] bookRows = 
-				records.stream().map(Book::getBook).collect(Collectors.toList())
-				.toArray(new Object[0][0]);
-		return bookRows;
-	}
-
-	static Object[][] getBookByID(int id) {
-		try {
-			// Sort by ID before performing binary search
-			sortByIDAscending();
-
-			// Perform binary search
-			int idx = Collections.binarySearch(records, new Book(id), Comparator.comparingInt(book -> book.id));
-
-			// Check if the book was found (binarySearch returns a negative value if not found)
-			if (idx < 0) {
-				JOptionPane.showMessageDialog(null,"Book with ID " + id + " not found.");
-			}
-
-			// Find book
-			Book search = records.get(idx);
-
-			// Convert Book to Object[] and wrap in Object[][]
-			Object[][] bookRow = { getBook(search) };
-			return bookRow;
-
-		} 
-		catch (IndexOutOfBoundsException e) {
-			return new Object[0][0]; // Return empty array if book not found
-		} 
-		catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			return new Object[0][0]; // Return empty array if any other error occurs
-		}
-	}
-
-	static Object[][] getBookByISBN(String isbn) {
-		try {
-			// Sort by ISBN before performing binary search	
-			sortByISBNAscending();
-
-			// Perform binary search
-			int isbnx = Collections.binarySearch(records, new Book(isbn), Comparator.comparing(Book -> Book.isbn));
-
-			// Find Book
-			Book search = records.get(isbnx);
-
-			// Convert Book to object[] and wrap in Object[][]
-			Object[][] bookRow = { getBook(search) };
-
-			return bookRow; 
-		}
-		catch (IndexOutOfBoundsException e) {
-			JOptionPane.showMessageDialog(null,"Book with ISBN " + isbn + " not found.");
-			return new Object[0][0]; // Return empty array if book not found
-		}
-		catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "An unexpected error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			return new Object[0][0]; // Return empty array if any other error occurs
-		}
-	}
-
 	public static void sortByISBNAscending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
 	}
-
+	
 	public static void sortByISBNDescending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
 		Collections.reverse(records);
@@ -231,23 +158,7 @@ public class Book{
 	public static void sortByPublicationYearDescending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.pubYear, Comparator.reverseOrder()));
 	}
-
-	public static String printBook(Book book) {
-		System.out.println("ID: " + book.id
-				+ ", Title: "   + book.title
-				+ ", Authors: " + book.authors
-				+ ", ISBN: "    + book.isbn 
-				+ ", Year: " 	+ book.pubYear
-				+ ", Rating: "  + book.aveRating);
-		String bookInfo = ("ID: " + String.valueOf(book.id)
-		+ ", Title: "   + book.title
-		+ ", Authors: " + book.authors
-		+ ", ISBN: "    + book.isbn 
-		+ ", Year: " 	+ book.pubYear
-		+ ", Rating: "  + String.valueOf(book.aveRating));
-		return bookInfo;
-	}
-
+	
 	public static Object[] getBook(Book book) {
 		Object[] bookRow = {
 				book.id,
@@ -259,5 +170,4 @@ public class Book{
 		};
 		return bookRow;
 	}
-
 }

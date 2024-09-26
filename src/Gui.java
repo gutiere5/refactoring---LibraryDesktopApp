@@ -26,7 +26,7 @@ public class Gui extends JFrame{
 
 	// DefaultTableModel
 	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-	DefaultTableModel recordsDTM = new DefaultTableModel(Book.getTenRecords(), Columns);
+	DefaultTableModel recordsDTM = new DefaultTableModel(SearchPerformance.getTenRecords(), Columns);
 	JTable recordDisplay;
 
 	// JButtons
@@ -42,6 +42,9 @@ public class Gui extends JFrame{
 	
 	// JComboBox
 	JComboBox searchComboBox;
+	
+	// JLabels 
+	JLabel timeLabel;
 
 	// Constructor
 	public Gui() {
@@ -71,6 +74,7 @@ public class Gui extends JFrame{
 		// JLabels
 		JLabel PerformanceLabel = new JLabel("Performance: ");
 		JLabel actionLabel = new JLabel("Actions");
+		timeLabel = new JLabel("");
 
 		// JButtons
 		topTenButton =  new JButton("Show Top Ten");
@@ -90,6 +94,7 @@ public class Gui extends JFrame{
 
 		// Add Components to Performance Panel
 		performancePanel.add(PerformanceLabel);
+		performancePanel.add(timeLabel);
 
 		// Add Components to Action Panel
 		actionPanel.add(actionLabel);
@@ -129,7 +134,7 @@ public class Gui extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				recordsDTM.setDataVector(Book.getTenRecords(), Columns);
+				recordsDTM.setDataVector(SearchPerformance.getTenRecords(), Columns);
 			}
 		});
 
@@ -137,7 +142,7 @@ public class Gui extends JFrame{
 		showAllButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(Book.GetAllBooks(), Columns);
+				recordsDTM.setDataVector(SearchPerformance.GetAllBooks(), Columns);
 			}
 		});
 
@@ -149,25 +154,16 @@ public class Gui extends JFrame{
 				
 				if (searchComboBox.getSelectedItem() == "ID") {
 					int userInput = Integer.parseInt(searchField.getText());
-					recordsDTM.setDataVector(Book.getBookByID(userInput), Columns);
+					recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
+					timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + "Nanoseconds"));
 				}
 				
 				if (searchComboBox.getSelectedItem() == "ISBN") {
 					String userInput = searchField.getText();
-					recordsDTM.setDataVector(Book.getBookByISBN(userInput), Columns);
-				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
+					recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
+					timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + "Nanoseconds"));
+				}					
 			}
 		});
-
-
 	}
 }
