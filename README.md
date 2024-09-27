@@ -31,3 +31,17 @@ In addition to these requirements, we have made it so that you can sort by any o
     Book icon added to distinguish the application 
 
 We found the ArrayList (binary search) to have significant improvements over the linear search method, and recommend implementation of this version. 
+
+    Searching ArrayList holding 500 records:
+    ID: 238000ns
+    ISBN: 157600ns
+    Searching ArrayList holding 1000 records:
+    ID: 6200ns
+    ISBN: 18800ns
+
+    Searching LinkedList holding 500 records:
+    ID: 247900ns
+    ISBN: 226400ns
+    Searching LinkedList holding 1000 records:
+    ID: 948600ns
+    ISBN: 737800ns
