@@ -18,7 +18,7 @@ public class Book{
 	String title = null;
 	String authors = null;
 	String isbn;
-	String pubYear = null;
+	int pubYear;
 	Double aveRating = null;
 
 	Book(int id){
@@ -29,7 +29,7 @@ public class Book{
 		this.isbn = isbn;
 	}
 
-	Book(int id, String title, String authors, String isbn, String pubYear, Double aveRating){
+	Book(int id, String title, String authors, String isbn, int pubYear, Double aveRating){
 		this.id = id;
 		this.title = title;
 		this.authors = authors;
@@ -74,7 +74,7 @@ public class Book{
 								values[1],
 								values[2],
 								values[3],
-								values[4],
+								Integer.parseInt(values[4]),
 								Double.parseDouble(values[5])
 								);
 
