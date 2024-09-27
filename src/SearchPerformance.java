@@ -12,7 +12,7 @@ public class SearchPerformance {
 	static int linearSearch(String ISBN){
 		int result = -1;
 		for (int i = 0; i < Book.records.size(); i++) {
-			if(Book.records.get(i).isbn == ISBN) {
+			if(Book.records.get(i).isbn.equals(ISBN)) {
 				result = i;
 				break;
 			}

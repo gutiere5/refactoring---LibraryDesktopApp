@@ -39,7 +39,7 @@ public class Book{
 
 	}
 
-	public static void importRecords() {
+	public static void importRecords(int importLimit) {
 		// Define the delimiter used in the CSV file (in this case, a comma)
 		//String delimiter = ",";
 		String delimiter = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
@@ -59,13 +59,11 @@ public class Book{
 			int aveRatingIdx = 5;
 
 			String line;  // Variable to hold each line read from the CSV
-
+			int i = 0;
 			// Read each subsequent line of the CSV (skipping the header)
-			while ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null && i <= importLimit) {
 				// Split the line into values using the defined delimiter (comma)
 				String[] values = line.split(delimiter);
-
-
 				// Check if the essential fields are not empty before creating the Book object
 				if (!values[idIdx].isEmpty() && !values[titleIdx].isEmpty() 
 						&& !values[isbnIdx].isEmpty() && !values[aveRatingIdx].isEmpty()) {
@@ -86,7 +84,9 @@ public class Book{
 					} catch (NumberFormatException e) {
 						// Handle cases where numbers cannot be parsed (invalid book_id or average_rating)
 						System.err.println("Skipping row due to invalid number format: " + Arrays.toString(values));
-					}
+					} finally {
+						// Only increment the import limit if the row was successfully added
+						i++;					}
 				} else {
 					// Skip row if any required field is empty
 					System.out.println("Skipping row due to empty required fields: " + Arrays.toString(values));
