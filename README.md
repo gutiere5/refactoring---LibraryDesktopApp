@@ -45,3 +45,8 @@ We found the ArrayList (binary search) to have significant improvements over the
     Searching LinkedList holding 1000 records:
     ID: 948600ns
     ISBN: 737800ns
+
+    Searching LinkedHashMap holding 500 records:
+    ISBN: 6400ns
+    Searching LinkedHashMap holding 1000 records:
+    ISBN: 6400ns
