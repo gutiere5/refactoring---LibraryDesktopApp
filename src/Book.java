@@ -1,3 +1,7 @@
+import com.opencsv.CSVReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -64,23 +68,14 @@ public class Book{
 			while ((line = br.readLine()) != null && i <= importLimit) {
 				// Split the line into values using the defined delimiter (comma)
 				String[] values = line.split(delimiter);
+				
+				
+				
 				// Check if the essential fields are not empty before creating the Book object
-				if (!values[idIdx].isEmpty() && !values[titleIdx].isEmpty() 
-						&& !values[isbnIdx].isEmpty() && !values[aveRatingIdx].isEmpty()) {
+				 if (isValidRecord(values, idIdx, titleIdx, isbnIdx, aveRatingIdx)) {
 					try {
-						// Create a new Book object using the parsed values from the line
-						Book book = new Book(
-								Integer.parseInt(values[0]),
-								values[1],
-								values[2],
-								values[3],
-								Integer.parseInt(values[4]),
-								Double.parseDouble(values[5])
-								);
-
-						// Add the newly created Book object to the 'records' list
+						Book book = parseBook(values, idIdx, titleIdx, authorsIdx, isbnIdx, pubYearIdx, aveRatingIdx);
 						records.add(book);
-
 					} catch (NumberFormatException e) {
 						// Handle cases where numbers cannot be parsed (invalid book_id or average_rating)
 						System.err.println("Skipping row due to invalid number format: " + Arrays.toString(values));
@@ -92,13 +87,30 @@ public class Book{
 					System.out.println("Skipping row due to empty required fields: " + Arrays.toString(values));
 				}
 			}
-
 		} catch (Exception e) {
 			// Print any exceptions that occur during file reading or parsing
 			e.printStackTrace();
 		}
 	}
 
+	
+	private static boolean isValidRecord(String[] values, int idIdx, int titleIdx, int isbnIdx, int avgRatingIdx) {
+	    return !values[idIdx].isEmpty() && !values[titleIdx].isEmpty() &&
+	           !values[isbnIdx].isEmpty() && !values[avgRatingIdx].isEmpty();
+	}
+
+	private static Book parseBook(String[] values, int idIdx, int titleIdx, int authorsIdx, int isbnIdx, int pubYearIdx, int avgRatingIdx) {
+	    int id = Integer.parseInt(values[idIdx]);
+	    String title = values[titleIdx];
+	    String authors = values[authorsIdx];
+	    String isbn = values[isbnIdx];
+	    int publicationYear = Integer.parseInt(values[pubYearIdx]);
+	    double averageRating = Double.parseDouble(values[avgRatingIdx]);
+
+	    return new Book(id, title, authors, isbn, publicationYear, averageRating);
+	}
+	
+	
 	public static void sortByISBNAscending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
 	}
