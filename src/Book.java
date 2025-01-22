@@ -44,73 +44,64 @@ public class Book{
 	}
 
 	public static void importRecords(int importLimit) {
-		// Define the delimiter used in the CSV file (in this case, a comma)
-		//String delimiter = ",";
-		String delimiter = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
+		try (CSVReader csvReader  = new CSVReader(new FileReader("books.csv"))) {
 
-		// Try-with-resources: Automatically close the BufferedReader after use
-		try (BufferedReader br = new BufferedReader(new FileReader("books.csv"))) {
+			List<String[]> rows = csvReader.readAll();
+			int recordsImported = 0;
 
-			// Read the first line of the CSV, which contains the column headers
-			String[] header = br.readLine().split(delimiter);
+			for (int i = 1; i < rows.size() && recordsImported < importLimit; i++) { 
+				String[] values = rows.get(i);
 
-			// Initialize variables to store the column indices of the relevant fields
-			int idIdx = 0;
-			int titleIdx = 1;
-			int authorsIdx = 2;
-			int isbnIdx = 3;
-			int pubYearIdx = 4;
-			int aveRatingIdx = 5;
-
-			String line;  // Variable to hold each line read from the CSV
-			int i = 0;
-			// Read each subsequent line of the CSV (skipping the header)
-			while ((line = br.readLine()) != null && i <= importLimit) {
-				// Split the line into values using the defined delimiter (comma)
-				String[] values = line.split(delimiter);
-				
-				
-				
-				// Check if the essential fields are not empty before creating the Book object
-				 if (isValidRecord(values, idIdx, titleIdx, isbnIdx, aveRatingIdx)) {
+				if (isValidRecord(values)) {
 					try {
-						Book book = parseBook(values, idIdx, titleIdx, authorsIdx, isbnIdx, pubYearIdx, aveRatingIdx);
-						records.add(book);
+						records.add(parseBook(values));
+						recordsImported++;
 					} catch (NumberFormatException e) {
-						// Handle cases where numbers cannot be parsed (invalid book_id or average_rating)
-						System.err.println("Skipping row due to invalid number format: " + Arrays.toString(values));
-					} finally {
-						// Only increment the import limit if the row was successfully added
-						i++;					}
+						System.err.println("Invalid number format, skipping row: " + Arrays.toString(values));
+					}
 				} else {
-					// Skip row if any required field is empty
-					System.out.println("Skipping row due to empty required fields: " + Arrays.toString(values));
-				}
+					System.out.println("Invalid or incomplete record, skipping row: " + Arrays.toString(values));
+				} 
+
 			}
-		} catch (Exception e) {
-			// Print any exceptions that occur during file reading or parsing
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	
-	private static boolean isValidRecord(String[] values, int idIdx, int titleIdx, int isbnIdx, int avgRatingIdx) {
-	    return !values[idIdx].isEmpty() && !values[titleIdx].isEmpty() &&
-	           !values[isbnIdx].isEmpty() && !values[avgRatingIdx].isEmpty();
+
+	private static boolean isValidRecord(String[] values) {		   
+		if (values.length < 6) {
+			return false;
+		}
+
+		try {		    
+			Integer.parseInt(values[0]);
+			Integer.parseInt(values[4]);
+			Double.parseDouble(values[5]); 
+
+			return !values[1].trim().isEmpty() && 
+					!values[2].trim().isEmpty() &&
+					!values[3].trim().isEmpty(); 
+		} catch (NumberFormatException e) {		       
+			return false;
+		}
 	}
 
-	private static Book parseBook(String[] values, int idIdx, int titleIdx, int authorsIdx, int isbnIdx, int pubYearIdx, int avgRatingIdx) {
-	    int id = Integer.parseInt(values[idIdx]);
-	    String title = values[titleIdx];
-	    String authors = values[authorsIdx];
-	    String isbn = values[isbnIdx];
-	    int publicationYear = Integer.parseInt(values[pubYearIdx]);
-	    double averageRating = Double.parseDouble(values[avgRatingIdx]);
+	private static Book parseBook(String[] values) {		    
+		int bookId = Integer.parseInt(values[0]);
+		String title = values[1].trim();
+		String authors = values[2].trim();
+		String isbn = values[3].trim();
+		int publicationYear = Integer.parseInt(values[4]);
+		double averageRating = Double.parseDouble(values[5]);
 
-	    return new Book(id, title, authors, isbn, publicationYear, averageRating);
+
+		return new Book(bookId, title, authors, isbn, publicationYear, averageRating);
 	}
-	
-	
+
+
 	public static void sortByISBNAscending() {
 		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
 	}
