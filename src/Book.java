@@ -15,35 +15,39 @@ import javax.swing.JOptionPane;
 
 import java.util.Comparator;
 
-public class Book{
-	static List<Book> records = new ArrayList<Book>();
+public class Book{	
+	private List<Book> records = new ArrayList<Book>();
+	private int id;
+	private String title = null;
+	private String authors = null;
+	private String isbn;
+	private int pubYear;
+	private Double aveRating = null;
 
-	int id;
-	String title = null;
-	String authors = null;
-	String isbn;
-	int pubYear;
-	Double aveRating = null;
+	Book(){};
 
-	Book(int id){
-		this.id = id;
-	}
+	Book(int id){this.id = id;}
 
-	Book(String isbn) {
-		this.isbn = isbn;
-	}
+	Book(String isbn) {this.isbn = isbn;}
 
-	Book(int id, String title, String authors, String isbn, int pubYear, Double aveRating){
+	Book(int id, String title, String authors, String isbn, int pubYear, Double aveRating) {
 		this.id = id;
 		this.title = title;
 		this.authors = authors;
 		this.isbn = isbn;
 		this.pubYear = pubYear;
 		this.aveRating = aveRating;
-
 	}
 
-	public static void importRecords(int importLimit) {
+	public String getIsbn()	{
+		return this.isbn;
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public void importRecords(int importLimit) {
 		try (CSVReader csvReader  = new CSVReader(new FileReader("books.csv"))) {
 
 			List<String[]> rows = csvReader.readAll();
@@ -54,7 +58,7 @@ public class Book{
 
 				if (isValidRecord(values)) {
 					try {
-						records.add(parseBook(values));
+						getRecords().add(parseBook(values));
 						recordsImported++;
 					} catch (NumberFormatException e) {
 						System.err.println("Invalid number format, skipping row: " + Arrays.toString(values));
@@ -71,7 +75,7 @@ public class Book{
 	}
 
 
-	private static boolean isValidRecord(String[] values) {		   
+	private boolean isValidRecord(String[] values) {		   
 		if (values.length < 6) {
 			return false;
 		}
@@ -89,7 +93,7 @@ public class Book{
 		}
 	}
 
-	private static Book parseBook(String[] values) {		    
+	private Book parseBook(String[] values) {		    
 		int bookId = Integer.parseInt(values[0]);
 		String title = values[1].trim();
 		String authors = values[2].trim();
@@ -102,33 +106,56 @@ public class Book{
 	}
 
 
-	public static void sortByISBNAscending() {
-		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
+	public void sortByISBNAscending() {
+		Collections.sort(getRecords(), Comparator.comparing(records -> records.isbn));
 	}
 
-	public static void sortByISBNDescending() {
-		Collections.sort(records, Comparator.comparing(Book -> Book.isbn));
-		Collections.reverse(records);
+	public void sortByISBNDescending() {
+		Collections.sort(getRecords(), Comparator.comparing(records -> records.isbn));
+		Collections.reverse(getRecords());
 	}
 
-	public static void sortByIDAscending() {
-		Collections.sort(records, Comparator.comparingInt(Book -> Book.id));
+	public void sortByIDAscending() {
+		Collections.sort(getRecords(), Comparator.comparingInt(records -> records.id));
 	}
 
-	public static void sortByIDDescending() {
-		Collections.sort(records, Comparator.comparingInt(Book -> Book.id));
-		Collections.reverse(records);
+	public void sortByIDDescending() {
+		Collections.sort(getRecords(), Comparator.comparingInt(records -> records.id));
+		Collections.reverse(getRecords());
 	}
 
-	public static Object[] getBook(Book book) {
+	// TODO This can be changed, look for refactoring techniques
+	public  Object[] getBook() {
 		Object[] bookRow = {
-				book.id,
-				book.title,
-				book.authors,
-				book.isbn,
-				book.pubYear,
-				book.aveRating
+				this.id,
+				this.title,
+				this.authors,
+				this.isbn,
+				this.pubYear,
+				this.aveRating
 		};
 		return bookRow;
+	}
+
+	// TODO Other classes should not manipulate this data, only the book class 
+	public List<Book> getRecords() {
+		return records;
+	}
+
+	public void setRecords(List<Book> records) {
+		this.records = records;
+	}
+
+	public Object[][] GetAllBooks(){
+		return 	getRecords().stream().map(Book::getBook).collect(Collectors.toList())
+				.toArray(new Object[0][0]);
+
+	}
+
+	// Prints the top ten book records
+	public Object[][] getTenRecords() {
+		return getRecords().stream().limit(10).map(Book::getBook).collect(Collectors.toList())
+				.toArray(new Object[0][0]);
+
 	}
 }

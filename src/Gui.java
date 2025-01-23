@@ -27,10 +27,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Gui extends JFrame{
-
+	Book book = new Book();
+	SearchPerformance searchPerformance = new SearchPerformance();
 	// DefaultTableModel
 	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-	DefaultTableModel recordsDTM = new DefaultTableModel(SearchPerformance.getTenRecords(), Columns) {
+	DefaultTableModel recordsDTM = new DefaultTableModel(book.getTenRecords(), Columns) {
 		@Override
 		public Class<?> getColumnClass(int column){
 			if (column == 0) {
@@ -59,8 +60,8 @@ public class Gui extends JFrame{
 
 	// JLabels 
 	JLabel timeLabel;
-	static boolean softSearch = false;
-	static boolean testMode = false;
+	boolean softSearch = false;
+	boolean testMode = false;
 
 
 	public Gui() {
@@ -157,7 +158,7 @@ public class Gui extends JFrame{
 		topTenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(SearchPerformance.getTenRecords(), Columns);
+				recordsDTM.setDataVector(book.getTenRecords(), Columns);
 			}
 		});
 
@@ -165,7 +166,7 @@ public class Gui extends JFrame{
 		showAllButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(SearchPerformance.GetAllBooks(), Columns);
+				recordsDTM.setDataVector(book.GetAllBooks(), Columns);
 			}
 		});
 		
@@ -198,7 +199,7 @@ public class Gui extends JFrame{
 					if (searchComboBox.getSelectedItem() == "ID") {			
 						// Perform the search and update the table
 						int userInput = Integer.parseInt(searchField.getText());
-						recordsDTM.setDataVector(SearchPerformance.getBookByID(userInput), Columns);
+						recordsDTM.setDataVector(searchPerformance.getBookByID(userInput), Columns);
 						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
 					}
 

@@ -20,7 +20,7 @@ public class LibraryDesktop{
 			numRecords = Integer.MAX_VALUE;
 		}
 
-		Book.importRecords(numRecords);
+		//Book.importRecords(numRecords);
 
 		// Initializes GUI
 		try {
