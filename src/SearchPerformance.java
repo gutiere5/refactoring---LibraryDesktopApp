@@ -9,7 +9,7 @@ public class SearchPerformance {
 	private static long endTime;
 	public static long elapsedTime;
 
-	static Book book = new Book();
+	static BookRecords book = new BookRecords();
 
 
 	static int linearSearch(String ISBN){

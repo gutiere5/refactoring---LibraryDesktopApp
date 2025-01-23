@@ -27,20 +27,24 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class Gui extends JFrame{
-	Book book = new Book();
+	BookRecords bookRecords = new BookRecords();
+	
 	SearchPerformance searchPerformance = new SearchPerformance();
+	
+	
 	// DefaultTableModel
-	String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-	DefaultTableModel recordsDTM = new DefaultTableModel(book.getTenRecords(), Columns) {
-		@Override
-		public Class<?> getColumnClass(int column){
-			if (column == 0) {
-				return Integer.class;
-			}
-			return super.getColumnClass(column);
-		}
+		String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
+		@SuppressWarnings({ "serial", "serial" })
+		DefaultTableModel recordsDTM = new DefaultTableModel() {
+			@Override
+			public Class<?> getColumnClass(int column){
+				if (column == 0) {
+					return Integer.class;
+				}
+				return super.getColumnClass(column);
+			}};
+			
 		
-	};
 	JTable recordDisplay;
 
 	// JButtons
@@ -65,6 +69,10 @@ public class Gui extends JFrame{
 
 
 	public Gui() {
+		bookRecords.importRecords(100);
+		
+		recordsDTM.setDataVector(bookRecords.getTenRecords(), Columns);
+		
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Libray Desktop App (ArrayList)");
@@ -108,8 +116,6 @@ public class Gui extends JFrame{
 		// JComboBox
 		searchComboBox = new JComboBox(new String[] {"ID" , "ISBN"});
 
-
-
 		// Add Components to Search Panel
 		searchPanel.add(searchComboBox);
 		searchPanel.add(SearchBar());
@@ -133,7 +139,6 @@ public class Gui extends JFrame{
 		mainPanel.add(BookRecords(),BorderLayout.CENTER);
 		mainPanel.add(actionPanel, BorderLayout.EAST);
 		mainPanel.add(searchPanel,BorderLayout.NORTH);
-
 	}
 
 
@@ -158,7 +163,7 @@ public class Gui extends JFrame{
 		topTenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(book.getTenRecords(), Columns);
+				recordsDTM.setDataVector(bookRecords.getTenRecords(), Columns);
 			}
 		});
 
@@ -166,7 +171,7 @@ public class Gui extends JFrame{
 		showAllButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(book.GetAllBooks(), Columns);
+				recordsDTM.setDataVector(bookRecords.GetAllBooks(), Columns);
 			}
 		});
 		

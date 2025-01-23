@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class LibraryDesktop{
 
 	public static void main(String[] args){
+		
 		boolean DeveloperMode = false;
 		int numRecords;
 		//Imports Records from books.csv
@@ -20,7 +21,7 @@ public class LibraryDesktop{
 			numRecords = Integer.MAX_VALUE;
 		}
 
-		//Book.importRecords(numRecords);
+
 
 		// Initializes GUI
 		try {
