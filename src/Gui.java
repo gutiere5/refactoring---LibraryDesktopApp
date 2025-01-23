@@ -1,4 +1,3 @@
-import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -17,8 +17,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,29 +24,27 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class Gui extends JFrame{
+public class Gui extends JFrame {
 	BookRecords bookRecords = new BookRecords();
-	
 	SearchPerformance searchPerformance = new SearchPerformance();
-	
-	
+
 	// DefaultTableModel
-		String[] Columns = {"ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating"};
-		@SuppressWarnings({ "serial", "serial" })
-		DefaultTableModel recordsDTM = new DefaultTableModel() {
-			@Override
-			public Class<?> getColumnClass(int column){
-				if (column == 0) {
-					return Integer.class;
-				}
-				return super.getColumnClass(column);
-			}};
-			
-		
+	String[] Columns = { "ID", "Title", "Author(s)", "ISBN", "Publication Year", "Rating" };
+	@SuppressWarnings({ "serial", "serial" })
+	DefaultTableModel recordsDTM = new DefaultTableModel() {
+		@Override
+		public Class<?> getColumnClass(int column) {
+			if (column == 0) {
+				return Integer.class;
+			}
+			return super.getColumnClass(column);
+		}
+	};
+
 	JTable recordDisplay;
 
 	// JButtons
-	JButton topTenButton; 
+	JButton topTenButton;
 	JButton showAllButton;
 	JButton testPerfButton;
 	JButton searchButton;
@@ -62,17 +58,16 @@ public class Gui extends JFrame{
 	// JComboBox
 	JComboBox<?> searchComboBox;
 
-	// JLabels 
+	// JLabels
 	JLabel timeLabel;
 	boolean softSearch = false;
 	boolean testMode = false;
 
-
 	public Gui() {
-		bookRecords.importRecords(100);
-		
-		recordsDTM.setDataVector(bookRecords.getTenRecords(), Columns);
-		
+		bookRecords.importRecords();
+
+		recordsDTM.setDataVector(bookRecords.getTopNRecords(10), Columns);
+
 		// Create main panel with BorderLayout
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Libray Desktop App (ArrayList)");
@@ -80,9 +75,9 @@ public class Gui extends JFrame{
 		mainPanel = new JPanel();
 		mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(mainPanel);
-		mainPanel.setLayout(new BorderLayout(0,0));
+		mainPanel.setLayout(new BorderLayout(0, 0));
 		mainPanel.setBackground(new Color(234, 219, 203));
-		
+
 		// Load Icon
 		ImageIcon icon = new ImageIcon("book.png");
 		Image iconImage = icon.getImage();
@@ -92,7 +87,7 @@ public class Gui extends JFrame{
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
 
-		// Create a sub panel for performance metrics 
+		// Create a sub panel for performance metrics
 		JPanel performancePanel = new JPanel();
 		performancePanel.setLayout(new BoxLayout(performancePanel, BoxLayout.X_AXIS));
 
@@ -107,14 +102,14 @@ public class Gui extends JFrame{
 		timeLabel = new JLabel("");
 
 		// JButtons
-		topTenButton =  new JButton("Show Top Ten");
+		topTenButton = new JButton("Show Top Ten");
 		showAllButton = new JButton("Show All");
 		testPerfButton = new JButton("Test Mode = OFF");
 		searchButton = new JButton("Search");
-		showAllButton.setPreferredSize(new Dimension(100,40));
+		showAllButton.setPreferredSize(new Dimension(100, 40));
 
 		// JComboBox
-		searchComboBox = new JComboBox(new String[] {"ID" , "ISBN"});
+		searchComboBox = new JComboBox(new String[] { "ID", "ISBN" });
 
 		// Add Components to Search Panel
 		searchPanel.add(searchComboBox);
@@ -135,14 +130,13 @@ public class Gui extends JFrame{
 		actionPanel.add(testPerfButton);
 
 		// Add Sub Panels to the main Panel
-		mainPanel.add(performancePanel,BorderLayout.SOUTH);
-		mainPanel.add(BookRecords(),BorderLayout.CENTER);
+		mainPanel.add(performancePanel, BorderLayout.SOUTH);
+		mainPanel.add(BookRecords(), BorderLayout.CENTER);
 		mainPanel.add(actionPanel, BorderLayout.EAST);
-		mainPanel.add(searchPanel,BorderLayout.NORTH);
+		mainPanel.add(searchPanel, BorderLayout.NORTH);
 	}
 
-
-	public JScrollPane BookRecords(){		
+	public JScrollPane BookRecords() {
 		recordDisplay = new JTable(recordsDTM);
 		recordDisplay.setDefaultEditor(Object.class, null);
 		recordDisplay.setAutoCreateRowSorter(true);
@@ -151,6 +145,7 @@ public class Gui extends JFrame{
 
 		return sp;
 	}
+
 	public JTextField SearchBar() {
 		searchField = new JTextField("Type here to search for a book");
 		searchField.setSize(20, 20);
@@ -163,7 +158,7 @@ public class Gui extends JFrame{
 		topTenButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				recordsDTM.setDataVector(bookRecords.getTenRecords(), Columns);
+				recordsDTM.setDataVector(bookRecords.getTopNRecords(10), Columns);
 			}
 		});
 
@@ -174,15 +169,14 @@ public class Gui extends JFrame{
 				recordsDTM.setDataVector(bookRecords.GetAllBooks(), Columns);
 			}
 		});
-		
+
 		testPerfButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(testPerfButton.getText() == "Test Mode = OFF") {
+				if (testPerfButton.getText() == "Test Mode = OFF") {
 					testPerfButton.setText("Test Mode = ON ");
-					testMode = true;					
-				}
-				else {
+					testMode = true;
+				} else {
 					testPerfButton.setText("Test Mode = OFF");
 					testMode = false;
 				}
@@ -193,7 +187,7 @@ public class Gui extends JFrame{
 		searchButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				try {
 
 					// Check if the input field is empty
@@ -201,44 +195,44 @@ public class Gui extends JFrame{
 						throw new IllegalArgumentException("Input cannot be empty.");
 					}
 
-					if (searchComboBox.getSelectedItem() == "ID") {			
+					if (searchComboBox.getSelectedItem() == "ID") {
 						// Perform the search and update the table
 						int userInput = Integer.parseInt(searchField.getText());
-						recordsDTM.setDataVector(searchPerformance.getBookByID(userInput), Columns);
-						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+						recordsDTM.setDataVector(searchPerformance.binarySearchByID(userInput, bookRecords), Columns);
+						timeLabel.setText(String.valueOf(searchPerformance.getElapsedTime() + " Nanoseconds"));
 					}
 
-					if (searchComboBox.getSelectedItem() == "ISBN") {								
+					if (searchComboBox.getSelectedItem() == "ISBN") {
 						// Perform the search and update the table
 						String userInput = searchField.getText();
-						recordsDTM.setDataVector(SearchPerformance.getBookByISBN(userInput), Columns);
-						timeLabel.setText(String.valueOf(SearchPerformance.elapsedTime + " Nanoseconds"));
+						recordsDTM.setDataVector(searchPerformance.binarySearchByISBN(userInput, bookRecords), Columns);
+						timeLabel.setText(String.valueOf(searchPerformance.getElapsedTime() + " Nanoseconds"));
 					}
 				}
 
 				catch (NumberFormatException e1) {
 					// Handle invalid input (non-integer input)
-					if(softSearch == false) {
-						JOptionPane.showMessageDialog(null, "Please enter a valid integer.", "Input Error", JOptionPane.ERROR_MESSAGE);
+					if (softSearch == false) {
+						JOptionPane.showMessageDialog(null, "Please enter a valid integer.", "Input Error",
+								JOptionPane.ERROR_MESSAGE);
 					}
-				}
-				catch (IllegalArgumentException e1) {
+				} catch (IllegalArgumentException e1) {
 					// Handle empty input
-					if(softSearch == false) {
-						JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error", JOptionPane.WARNING_MESSAGE);
+					if (softSearch == false) {
+						JOptionPane.showMessageDialog(null, e1.getMessage(), "Input Error",
+								JOptionPane.WARNING_MESSAGE);
 					}
-				}
-				finally {
+				} finally {
 					softSearch = false;
 				}
 			}
 		});
-		
+
 		searchField.addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(searchField.getText().equals("Type here to search for a book")) {
+				if (searchField.getText().equals("Type here to search for a book")) {
 					searchField.setText("");
 				}
 			}
@@ -259,31 +253,29 @@ public class Gui extends JFrame{
 			public void mouseExited(MouseEvent e) {
 			}
 		});
-		
+
 		searchField.addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(searchField.getText().equals("Type here to search for a book")) {
+				if (searchField.getText().equals("Type here to search for a book")) {
 					searchField.setText("");
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					searchButton.doClick();
 				}
 			}
 
 			@Override
-			public void keyTyped(KeyEvent e) {	
+			public void keyTyped(KeyEvent e) {
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				try {
-					if(!searchField.getText().isEmpty() && testMode == false) {
+					if (!searchField.getText().isEmpty() && testMode == false) {
 						softSearch = true;
 						searchButton.doClick();
 					}
-				}
-				catch (Exception ex){
+				} catch (Exception ex) {
 				}
 			}
 		});
